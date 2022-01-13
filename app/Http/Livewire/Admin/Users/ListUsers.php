@@ -6,10 +6,14 @@ use App\Models\User;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Component;
 use Illuminate\Support\Facades\Validator;
+use Livewire\WithPagination;
 
 class ListUsers extends Component
 {
     use LivewireAlert;
+    use WithPagination;
+
+    protected $paginationTheme = 'bootstrap';
 
     public $state =[];
     public $user;
@@ -98,7 +102,7 @@ class ListUsers extends Component
 
     public function render()
     {
-        $users = User::latest()->paginate();
+        $users = User::latest()->paginate(3);
         return view('livewire.admin.users.list-users',[
             'users' => $users,
         ]);
