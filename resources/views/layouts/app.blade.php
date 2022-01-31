@@ -16,7 +16,17 @@
     <link rel="stylesheet" href="{{ asset('backend/plugins/fontawesome-free/css/all.min.css') }}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('backend/dist/css/adminlte.min.css') }}">
+    <!-- icheck -->
+    <link rel="stylesheet" href="{{ asset('backend/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
+
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('backend/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+
     @livewireStyles
+
+    @stack('styles')
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -58,31 +68,18 @@
     <script src="{{ asset('backend/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('backend/dist/js/adminlte.min.js') }}"></script>
+    <!-- moment javascript -->
+    <script src="{{ asset('backend/dist/js/moment.js') }}"></script>
 
-    <script>
-        $(document).ready(function(){
-            window.addEventListener('show-form', event => {
-                $('#form').modal('show');
-            })
 
-            window.addEventListener('hide-form', event => {
-                $('#form').modal('hide');
-            })
+    <script src="{{ asset('backend/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
 
-            window.addEventListener('show-delete-modal', event => {
-                $('#confirmationModal').modal('show');
-            })
-
-            window.addEventListener('hide-delete-modal', event => {
-                $('#confirmationModal').modal('hide');
-            })
-        });
-
-    </script>
 
     @livewireScripts
 
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @stack('js')
 
     <x-livewire-alert::scripts />
 

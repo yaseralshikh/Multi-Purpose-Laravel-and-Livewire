@@ -3,28 +3,35 @@
 namespace App\Http\Livewire\Admin\Users;
 
 use App\Models\User;
-use Jantinnerezo\LivewireAlert\LivewireAlert;
-use Livewire\Component;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Livewire\WithPagination;
+use App\Http\Livewire\Admin\AdminComponent;
 
-class ListUsers extends Component
+class ListUsers extends AdminComponent
 {
-    use LivewireAlert;
-    use WithPagination;
-
-    protected $paginationTheme = 'bootstrap';
+    use WithFileUploads;
 
     public $state =[];
+
     public $user;
+
     public $showEditModal = false;
 
     public $userIdBeingRemoved = null;
 
+    public $searchTerm = null;
+
+    public $photo;
+
     public function addNew()
     {
-        $this->showEditModal = false;
+        $this->reset();
+
         $this->state = [];
+
+        $this->showEditModal = false;
+
         $this->dispatchBrowserEvent('show-form');
     }
 
@@ -37,6 +44,10 @@ class ListUsers extends Component
             ])->validate();
 
         $validatedData['password'] = bcrypt($validatedData['password']);
+
+        if ($this->photo) {
+			$validatedData['avatar'] = $this->photo->store('/', 'avatars');
+		}
 
         User::create($validatedData);
 
@@ -52,6 +63,7 @@ class ListUsers extends Component
 
     public function edit(User $user)
     {
+        $this->reset();
         $this->showEditModal = true;
         $this->user = $user;
         $this->state = $user->toArray();
@@ -69,6 +81,11 @@ class ListUsers extends Component
         if(!empty($validatedData['password'])){
             $validatedData['password'] = bcrypt($validatedData['password']);
         }
+
+        if ($this->photo) {
+			Storage::disk('avatars')->delete($this->user->avatar);
+			$validatedData['avatar'] = $this->photo->store('/', 'avatars');
+		}
 
         $this->user->update($validatedData);
 
@@ -102,7 +119,11 @@ class ListUsers extends Component
 
     public function render()
     {
-        $users = User::latest()->paginate(3);
+        $users = User::query()
+            ->where('name', 'like', '%'.$this->searchTerm.'%')
+            ->orWhere('email', 'like', '%'.$this->searchTerm.'%')
+            ->latest()->paginate(10);
+
         return view('livewire.admin.users.list-users',[
             'users' => $users,
         ]);
