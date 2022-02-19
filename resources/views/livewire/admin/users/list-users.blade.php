@@ -38,6 +38,8 @@
                                             <th scope="col">Name</th>
                                             <th scope="col">photo</th>
                                             <th scope="col">Email</th>
+                                            <th scope="col">Role</th>
+                                            <th scope="col">Registration Date</th>
                                             <th scope="col">Option</th>
                                         </tr>
                                     </thead>
@@ -49,6 +51,13 @@
                                                 <td><img src="{{ $user->avatar_url }}" alt="{{ $user->avatar }}"
                                                         class="img img-circle" width="50px"></td>
                                                 <td>{{ $user->email }}</td>
+                                                <td>
+                                                    <select class="form-control" wire:change="changeRole({{ $user }}, $event.target.value)">
+                                                        <option value="admin" {{ ($user->role === 'admin') ? 'selected' : '' }}>ADMIN</option>
+                                                        <option value="user" {{ ($user->role === 'user') ? 'selected' : '' }}>USER</option>
+                                                    </select>
+                                                </td>
+                                                <td>{{ $user->created_at?->toFormattedDate() ?? 'N/A'  }}</td>
                                                 <td>
                                                     <a href="#" wire:click.prevent="edit({{ $user }})">
                                                         <i class="fa fa-edit mr-2"></i>

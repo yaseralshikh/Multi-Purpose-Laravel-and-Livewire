@@ -26,6 +26,7 @@ class UpdateAppointmentForm extends AdminComponent
 			$this->state,
 			[
 				'client_id' => 'required',
+                'members' => 'required',
 				'date' => 'required|date',
 				'time' => 'required',
 				'note' => 'nullable',

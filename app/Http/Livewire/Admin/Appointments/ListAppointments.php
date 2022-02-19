@@ -2,8 +2,10 @@
 
 namespace App\Http\Livewire\Admin\Appointments;
 
-use App\Http\Livewire\Admin\AdminComponent;
 use App\Models\Appointment;
+use App\Exports\AppointmentsExport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Livewire\Admin\AdminComponent;
 
 class ListAppointments extends AdminComponent
 {
@@ -62,7 +64,7 @@ class ListAppointments extends AdminComponent
     		->when($this->status, function ($query, $status) {
     			return $query->where('status', $status);
     		})
-    		->latest()
+    		->orderBy('order_position', 'asc')
     		->paginate(10);
 	}
 
@@ -101,6 +103,24 @@ class ListAppointments extends AdminComponent
 
 		$this->reset(['selectPageRows', 'selectedRows']);
 	}
+
+    public function export()
+    {
+        return (new AppointmentsExport($this->selectedRows))->download('appointments.xlsx');
+        //return Excel::download(new AppointmentsExport, 'appointments.xlsx');
+    }
+
+    public function updateAppointmentOrder($items)
+    {
+        foreach ($items as $item) {
+            Appointment::find($item['value'])->update(['order_position' => $item['order']]);
+        }
+
+        $this->alert('success', 'Appointments sorted Successfully.', [
+            'position' => 'center',
+            'background' => '#e6fff7'
+        ]);
+    }
 
     public function render()
     {

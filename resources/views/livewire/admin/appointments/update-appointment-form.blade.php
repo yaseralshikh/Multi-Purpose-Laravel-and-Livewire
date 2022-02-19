@@ -44,6 +44,29 @@
                                             @enderror
                                         </div>
                                     </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Select Team Members</label>
+                                            <div class="@error('members') is-invalid border border-danger rounded custom-error @enderror">
+                                                <x-inputs.select2 wire:model="state.members" id="members" placeholder="Select Members">
+                                                    <option>One</option>
+                                                    <option>Alaska</option>
+                                                    <option>California</option>
+                                                    <option>Delaware</option>
+                                                    <option>Tennessee</option>
+                                                    <option>Texas</option>
+                                                    <option>Washington</option>
+                                                </x-inputs.select2>
+                                            </div>
+
+                                            @error('members')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="row">
@@ -111,6 +134,26 @@
                                             @enderror
                                         </div>
                                     </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group" wire:ignore.self>
+                                            <label>Color picker with addon:</label>
+
+                                            <div class="input-group" id="colorPicker">
+                                                <input wire:model.defer="state.color" type="text" name="color" class="form-control @error('color') is-invalid @enderror">
+
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text"><i class="fas fa-square"></i></span>
+                                                </div>
+                                                @error('color')
+                                                    <div class="invalid-feedback">
+                                                        {{ $message }}
+                                                    </div>
+                                                @enderror
+                                            </div>
+                                            <!-- /.input group -->
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="card-footer">
@@ -129,42 +172,36 @@
     </div>
 
     @push('js')
-        {{-- <script>
-            $(document).ready(function() {
-                $('#appointmentDate').datetimepicker({
-                    format: 'L',
-                });
-
-                $('#appointmentDate').on("change.datetimepicker", function(e) {
-                    let date = $(this).data('appointmentdate');
-                    eval(date).set('state.date', $('#appointmentDateInput').val());
-                });
-
-                $('#appointmentTime').datetimepicker({
-                    format: 'LT',
-                });
-
-                $('#appointmentTime').on("change.datetimepicker", function(e) {
-                    let time = $(this).data('appointmenttime');
-                    eval(time).set('state.time', $('#appointmentTimeInput').val());
-                });
-            });
-        </script> --}}
 
         <script src="https://cdn.ckeditor.com/ckeditor5/31.1.0/classic/ckeditor.js"></script>
 
         <script>
-            ClassicEditor
-                .create(document.querySelector('#note'))
-                .then(editor => {
-                    document.querySelector('#submit').addEventListener('click', () => {
-                        let note = $('#note').data('note');
-                        eval(note).set('state.note', editor.getData());
-                    });
+            $(function (){
+                //Colorpicker
+                $('.fa-square').css('color', $('[name=color]').val());
+                
+                $('#colorPicker').colorpicker().on('change', function(event) {
+                    $('#colorPicker .fa-square').css('color', event.color.toString());
                 })
-                .catch(error => {
-                    console.error(error);
-                });
+            })
         </script>
+
+        <script>
+            ClassicEditor.create(document.querySelector('#note'));
+            $('form').submit(function() {
+                @this.set('state.members', $('#members').val());
+                @this.set('state.note', $('#note').val());
+                @this.set('state.color', $('[name=color]').val());
+            })
+        </script>
+
+    @endpush
+
+    @push('styles')
+        <style>
+            .custom-error .select2-selection {
+                border: none;
+            }
+        </style>
     @endpush
 </div>

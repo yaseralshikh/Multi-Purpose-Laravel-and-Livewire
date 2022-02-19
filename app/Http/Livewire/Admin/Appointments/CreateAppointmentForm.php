@@ -20,6 +20,8 @@ class CreateAppointmentForm extends AdminComponent
 			$this->state,
 			[
 				'client_id' => 'required',
+				'members' => 'required',
+				'color' => 'required',
 				'date' => 'required|date',
 				'time' => 'required',
 				'note' => 'nullable',

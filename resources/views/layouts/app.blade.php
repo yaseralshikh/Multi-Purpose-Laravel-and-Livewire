@@ -17,16 +17,26 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('backend/dist/css/adminlte.min.css') }}">
     <!-- icheck -->
-    <link rel="stylesheet" href="{{ asset('backend/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('backend/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+    <!-- Bootstrap Color Picker -->
+    <link rel="stylesheet" href="{{ asset('backend/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css') }}">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
-    <link rel="stylesheet" type="text/css"
-        href="{{ asset('backend/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('backend/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
 
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+    @stack('alpine-plugins')
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-    @livewireStyles
+    {{-- <style>
+        .custom-error .select2-selection {
+            border: none;
+        }
+    </style> --}}
 
     @stack('styles')
+
+    @livewireStyles
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -70,14 +80,26 @@
     <script src="{{ asset('backend/dist/js/adminlte.min.js') }}"></script>
     <!-- moment javascript -->
     <script src="{{ asset('backend/dist/js/moment.js') }}"></script>
-
-
+    <!-- Tempusdominus Bootstrap 4 -->
     <script src="{{ asset('backend/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
-
+    <!-- bootstrap color picker -->
+    <script src="{{ asset('backend/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js') }}"></script>
 
     @livewireScripts
 
+    <script src="https://cdn.jsdelivr.net/gh/livewire/sortable@v0.x.x/dist/livewire-sortable.js"></script>
+    
+    <!-- sweetalert2 -->>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        $('[x-ref="profileLink"]').on('click', function () {
+            localStorage.setItem('_x_currentTab', '"profile"');
+        });
+        $('[x-ref="changePasswordLink"]').on('click', function () {
+            localStorage.setItem('_x_currentTab', '"changePassword"');
+        });
+    </script>
 
     @stack('js')
 

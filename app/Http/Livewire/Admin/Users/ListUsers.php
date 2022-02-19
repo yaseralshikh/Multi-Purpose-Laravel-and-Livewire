@@ -7,6 +7,7 @@ use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Livewire\Admin\AdminComponent;
+use Illuminate\Validation\Rule;
 
 class ListUsers extends AdminComponent
 {
@@ -23,6 +24,23 @@ class ListUsers extends AdminComponent
     public $searchTerm = null;
 
     public $photo;
+
+    public function changeRole(User $user, $role)
+	{
+		Validator::make(['role' => $role], [
+			'role' => [
+				'required',
+				Rule::in(User::ROLE_ADMIN, User::ROLE_USER),
+			],
+		])->validate();
+
+		$user->update(['role' => $role]);
+
+        $this->alert('success', 'Role changed to '. $role .' successfully.', [
+            'position' => 'center',
+            'background' => '#e6fff7'
+        ]);
+	}
 
     public function addNew()
     {

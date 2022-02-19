@@ -42,11 +42,14 @@
                                         <a wire:click.prevent="deleteSelectedRows" class="dropdown-item" href="#">Delete Selected</a>
                                         <a wire:click.prevent="markAllAsScheduled" class="dropdown-item" href="#">Mark as Scheduled</a>
                                         <a wire:click.prevent="markAllAsClosed" class="dropdown-item" href="#">Mark as Close</a>
-                                        {{-- <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Separated link</a> --}}
+                                        <div class="dropdown-divider"></div>
+                                        <a wire:click.prevent="export" class="dropdown-item" href="#">Export to Excel</a>
                                     </div>
                                 </div>
-                                <span class="ml-2">Selected <span class="text-primary">{{ count($selectedRows) }}</span> {{ Str::plural('appointmen', count($selectedRows)) }}</span>
+                                <div class="d-inline-block animate__animated animate__pulse animate__infinite">
+                                    <span class="ml-2">Selected <span class="text-primary">{{ count($selectedRows) }}</span> {{ Str::plural('appointmen', count($selectedRows)) }}</span>
+                                </div>
+
                             @endif
                         </div>
 
@@ -74,10 +77,11 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-hover text-center">
+                                <table class="table table-hover text-center">
                                     <thead>
                                         <tr class="bg-light">
-                                            <th scope="col">
+                                            <th></th>
+                                            <th>
                                                 <div class="icheck-primary d-inline ml-2">
                                                     <input wire:model="selectPageRows" type="checkbox" value="" name="todo2" id="todoCheck2">
                                                     <label for="todoCheck2"></label>
@@ -91,11 +95,12 @@
                                             <th scope="col">Option</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody wire:sortable="updateAppointmentOrder">
                                         @foreach ($appointments as $appointment)
-                                            <tr>
-                                                <th>
-                                                    <div class="icheck-primary d-inline ml-2">
+                                            <tr wire:sortable.item="{{ $appointment->id }}" wire:key="task-{{ $appointment->id }}">
+                                                <td wire:sortable.handle style="width: 10px; cursor: move;"><i class="fa fa-arrows-alt text-muted"></i></td>
+                                                <th style="width: 10px;">
+                                                    <div class="icheck-primary d-inline">
                                                         <input wire:model="selectedRows" type="checkbox" value="{{ $appointment->id }}" name="todo2"
                                                             id="{{ $appointment->id }}">
                                                         <label for="{{ $appointment->id }}"></label>
@@ -104,7 +109,7 @@
                                                 <th scope="row">
                                                     {{ $loop->iteration + $appointments->firstItem() - 1 }}</th>
                                                 <td>{{ $appointment->client->name }}</td>
-                                                <td>{{ $appointment->date }}</td>
+                                                <td> <i class="fa fa-solid fa-calendar" style="color: {{ $appointment->color }}"></i> {{ $appointment->date }}</td>
                                                 <td>{{ $appointment->time }}</td>
                                                 <td>
                                                     <span
@@ -140,3 +145,15 @@
 
     <x-confirmation-alert />
 </div>
+
+@push('styles')
+    <style>
+        .draggable-mirror {
+            background-color: white;
+            width: 950px;
+            display: flex;
+            justify-content: space-between;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+@endpush
